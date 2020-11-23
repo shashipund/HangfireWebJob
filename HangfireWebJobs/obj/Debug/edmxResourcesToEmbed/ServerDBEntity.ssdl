@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LT_SERVER_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Menu">
+    <Key>
+      <PropertyRef Name="MenuID" />
+    </Key>
+    <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MenuName" Type="varchar" MaxLength="50" />
+    <Property Name="RoleID" Type="int" />
+  </EntityType>
+  <EntityType Name="Priority">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PriorityName" Type="varchar" MaxLength="50" />
+    <Property Name="Frequency" Type="nchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TablePriority">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestBenchID" Type="varchar" MaxLength="20" />
+    <Property Name="TableName" Type="varchar" MaxLength="50" />
+    <Property Name="PriorityID" Type="int" />
+  </EntityType>
+  <EntityType Name="TestBenchDetails">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="TestBenchName" Type="varchar" MaxLength="50" />
+    <Property Name="DBName" Type="varchar" MaxLength="50" />
+    <Property Name="IPAddress" Type="varchar" MaxLength="50" />
+    <Property Name="DBUser" Type="varchar" MaxLength="50" />
+    <Property Name="DBPassword" Type="varchar" MaxLength="50" />
+    <Property Name="PortNo" Type="int" />
+    <Property Name="TestBenchID" Type="varchar" MaxLength="20" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" />
+    <Property Name="Mobile" Type="numeric" Precision="18" Scale="0" />
+    <Property Name="Email" Type="varchar" MaxLength="100" />
+    <Property Name="RoleID" Type="int" />
+    <Property Name="Password" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'LT_SERVER_DB.dbo.TablePriorityList' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="TablePriorityList">
+          <Property Name="PriorityID" Type="int" />
+          <Property Name="TestBenchID" Type="varchar" MaxLength="20" />
+          <Property Name="TableName" Type="varchar" MaxLength="50" />
+        </EntityType>-->
+  <Association Name="FK_Menu_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Menu">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="CreateTable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="query" Type="varchar(max)" Mode="In" />
+    <Parameter Name="tableName" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="LT_SERVER_DBModelStoreContainer">
+    <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Priority" EntityType="Self.Priority" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TablePriority" EntityType="Self.TablePriority" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TestBenchDetails" EntityType="Self.TestBenchDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Menu_Role" Association="Self.FK_Menu_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="Menu" EntitySet="Menu" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
